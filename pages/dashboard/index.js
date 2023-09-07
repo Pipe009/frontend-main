@@ -75,6 +75,7 @@ export default function Component({ posts }) {
               {posts.users.map((post) => (
                 <TableRow key={post.id}>
                   <TableCell>{post.id}</TableCell>
+                  <TableCell>{post.studentid}</TableCell>
                   <TableCell>{post.firstname}</TableCell>
                   <TableCell>{post.lastname}</TableCell>
                   <TableCell>{post.username}</TableCell>
