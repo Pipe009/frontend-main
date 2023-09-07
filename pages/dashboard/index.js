@@ -99,7 +99,7 @@ export default function Component({ posts }) {
             </TableBody>
           </Table>
           <br></br>
-          <center><button type="button" className="btn btn-success btn-lg btn-block" ><Link className="nav-link" href="/dashboard/register" >Add member</Link></button></center>
+          <center><button type="button" className="btn btn-success btn-lg btn-block" ><Link className="nav-link" href="/dashboard/add" >Add member</Link></button></center>
 
         </TableContainer>
       </>
