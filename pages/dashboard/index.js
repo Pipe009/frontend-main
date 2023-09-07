@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Link from 'next/link';
 export async function getServerSideProps() {
   //Edit Ngrok
-  const res = await fetch('https://vercelests.vercel.app//api/users');
+  const res = await fetch('https://nattawut009-ji560chan-gmailcom.vercel.app/api/users');
   const posts = await res.json();
 
   return {
@@ -36,7 +36,7 @@ export default function Component({ posts }) {
     if (result.isConfirmed) {
       // Perform the deletion using fetch
       //Edit Ngrok
-      await fetch('https://vercelests.vercel.app/api/users?id=' + id, {
+      await fetch('https://nattawut009-ji560chan-gmailcom.vercel.app/api/users?id=' + id, {
         method: 'DELETE',
       });
   

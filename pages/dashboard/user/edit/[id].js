@@ -1,14 +1,18 @@
 import { useSession, signIn, signOut } from "next-auth/react";
-import Link from 'next/link';
-import { useRouter } from "next/router";
-import Swal from 'sweetalert2';
+import Link from "next/link";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Modal, Button } from 'react-bootstrap';
+import { useRouter } from "next/router";
+
 export async function getServerSideProps(req) {
-  const { id } = req.query;
-  const res = await fetch('https://nattawut009-ji560chan-gmailcom.vercel.app/api/user/' + id, {
+  const {id}   = req.query;
+  const res = await fetch('https://front-rickconway.vercel.app/api/users/'+ id , {
     method: 'GET',
+    
   })
   const posts = await res.json();
+console.log(posts)
+
 
   return {
     props: {
@@ -19,23 +23,23 @@ export async function getServerSideProps(req) {
 
 export default function Component({ posts }) {
   const { data: session } = useSession();
-  const router = useRouter();
+  const router = useRouter()
 
-
-  const handleUpdate = (event) => {1
+  //----------------------start handleUpdate--------------------------
+  const handleUpdate = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const jsonData = {
-      id: data.get('studentid'),
-      studentid: data.get('studentid'),
-      firstname: data.get('firstname'),
-      lastname: data.get('lastname'),
-      username: data.get('username'),
-      password: data.get('password'),
-      status: data.get('status')
+      id: data.get('txt_studentid'),
+      studentid: data.get('txt_studentid'),
+      firstname: data.get('txt_firstname'),
+      lastname: data.get('txt_lastname'),
+      username: data.get('txt_username'),
+      password: data.get('txt_password'),
+      status: data.get('txt_status')
     }
 
-      fetch(`https://nattawut009-ji560chan-gmailcom.vercel.app/api/user`, {
+      fetch(`https://nattawut009-ji560chan-gmailcom.vercel.app/api/users`, {
         method: 'PUT', // or 'PUT'
         headers: {
           'Content-Type': 'application/json',
@@ -57,100 +61,176 @@ export default function Component({ posts }) {
  
 
   }; //end handleSubmit
-  
-  // if (session) {
-    
+//----------------------end handleSubmit--------------------------
+  if (session) {
     return (
       <>
-        <nav className="navbar navbar-light bg-success">
+        <header>
+          <nav className="navbar fixed-top navbar-expand-lg bg-success">
+            <div className="container-fluid">
+              <button
+                className="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+              >
+                <span className="navbar-toggler-icon" />
+              </button>
+              <div
+                className="collapse navbar-collapse"
+                id="navbarSupportedContent"
+              >
+                <ul className="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+                Signed in as {session.user.fname} {session.user.lname} <br />
+                <span>&nbsp;</span>
+                <form className="d-flex" role="search">
+                  <button
+                    className="btn btn-info"
+                    type="submit"
+                    onClick={() => signOut()}
+                  >
+                    Sign Out
+                  </button>
+                </form>
+              </div>
+            </div>
+          </nav>
+        </header>
+        <br /><br /><br />
+        <main>
           <div className="container-fluid">
-            <div className="d-flex justify-content-between align-items-center w-100">
-              {/* <div>Signed in as {session.user.email} {session.user.fname} {session.user.lname}</div>
-              <button className="btn btn-danger" onClick={() => signOut()}>Sign out</button> */}
+            <p></p>
+            <div className="row">
+              <div className="col-md-12">
+                <div className="card">
+                  <h5 className="card-header">
+                    <i className="bi bi-person-vcard-fill" /> Add Member
+                  </h5>
+                  <div className="card-body">
+                 
+                    <form onSubmit={handleUpdate}>
+                    {posts.user.map((post, i) => (
+                    <>
+                    {/* <div className="input-group mb-3">
+                        <input
+                          type="text"
+                          name="txt_id"
+                          id="txt_id"
+                          className="form-control bg-white"
+                          placeholder="ID"
+                          // onChange={(event) => { setId(event.target.value) }}
+                          defaultValue={post.id}
+                          readOnly 
+                          required
+                        />
+                        </div> */}
+                      <div className="input-group mb-3">
+                        <input
+                          type="text"
+                          name="txt_studentid"
+                          id="txt_studentid"
+                          className="form-control bg-white"
+                          placeholder="StudentID"
+                          // onChange={(event) => { setStudentID(event.target.value) }}
+                          defaultValue={post.id}
+                          readOnly
+                        />
+                      </div>
+                      <div className="input-group mb-3">
+                        <input
+                          type="text"
+                          name="txt_firstname"
+                          id="txt_firstname"
+                          className="form-control bg-white"
+                          placeholder="Firstname"
+                          // onChange={(event) => { setFirstname(event.target.value) }}
+                          defaultValue={post.firstname}
+                          required
+                        />
+                      </div>
+                      <div className="input-group mb-3">
+                        <input
+                          type="text"
+                          name="txt_lastname"
+                          id="txt_lastname"
+                          className="form-control bg-white"
+                          placeholder="Lastname"
+                          // onChange={(event) => { setLastname(event.target.value) }}
+                          defaultValue={post.lastname}
+                          required
+                        />
+                      </div>
+                      <div className="input-group mb-3">
+                        <input
+                          type="text"
+                          name="txt_username"
+                          id="txt_username"
+                          className="form-control bg-white"
+                          placeholder="Username"
+                          // onChange={(event) => { setUsername(event.target.value) }}
+                          defaultValue={post.username}
+                          required
+                        />
+                      </div>
+                      <div className="input-group mb-3">
+                        <input
+                          type="text"
+                          name="txt_password"
+                          id="txt_password"
+                          className="form-control bg-white"
+                          placeholder="Password"
+                          // onChange={(event) => { setPassword(event.target.value) }}
+                          defaultValue={post.password}
+                          required
+                        />
+                      </div>
+                      <div className="input-group mb-3">
+                        <input
+                          type="text"
+                          name="txt_status"
+                          id="txt_status"
+                          className="form-control bg-white"
+                          // onChange={(event) => { setStatus(event.target.value) }}
+                          defaultValue={post.status}
+                          placeholder="Status"
+                          required
+                        />
+                      </div>
+
+                      <p />
+                      <div className="row">
+                        <div className="col-md-12 text-center text-lg-start">
+                          <button
+                            type="submit"
+                            className="btn btn-outline-success btn-block"
+                          >
+                            <span>Save</span>{" "}
+                            <i className="bi bi-arrow-right" />
+                          </button>&nbsp;&nbsp;&nbsp;
+                          <Link href="./" className="btn btn-outline-warning">Back</Link>
+                        </div>
+                      </div>
+                      </>
+                    ))}
+                    </form>
+                    <p></p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </nav>
-        <br />
-        <div className="container ">
-        <div className="card mt-4">
-          <div className="card-body">
-          
-            
-            <form onSubmit={handleUpdate}>
-             {posts.user.map((post, i) => (
-              <>
-            <button type = "submit" className="btn btn-success">Add New</button>
-            <Link href ="/dashboard">
-            <button className="btn btn-warning mx-1">Back</button>
-            </Link>
-              <div className="form-row">
-                <div className="form-group col-md-10">
-                  <label htmlFor="inputEmail4">Student Id</label>
-                  <input type="hidden" className="form-control" name ="studentid" id="studentid" placeholder="Student Id" 
-                  // onChange={(event) => { setPassword(event.target.value) }}
-                  defaultValue={post.id}
-                  required/>
-                </div>
-                <div className="form-group col-md-10">
-                  <label htmlFor="inputEmail4">Firstname</label>
-                  <input type="text" className="form-control" name ="firstname" id="firstname" placeholder="Firstname" 
-                  // onChange={(event) => { setPassword(event.target.value) }}
-                  defaultValue={post.firstname}
-                  required/>
-                </div>
-                <div className="form-group col-md-10">
-                  <label htmlFor="inputAddress">Lastname</label>
-                  <input type="text" className="form-control" name ="lastname" id="lastname" placeholder="Lastname" 
-                  // onChange={(event) => { setPassword(event.target.value) }}
-                  defaultValue={post.lastname}
-                  required/>
-                </div>
-                <div className="form-group col-md-10">
-                  <label htmlFor="inputAddress">Username</label>
-                  <input type="text" className="form-control" name ="username" id="username" placeholder="Username"
-                  // onChange={(event) => { setPassword(event.target.value) }}
-                  defaultValue={post.username}
-                  required />
-                </div>
-                <div className="form-group col-md-10">
-                  <label htmlFor="inputPassword4">Password</label>
-                  <input type="password" className="form-control" name ="password" id="password" placeholder="Password" 
-                  // onChange={(event) => { setPassword(event.target.value) }}
-                  defaultValue={post.password}
-                  required/>
-                </div>
-              </div>
-              <div className="form-group col-md-10">
-                <label htmlFor="inputAddress2">Status</label>
-                <input type="text" className="form-control" name ="status" id="status" placeholder="Status" 
-                // onChange={(event) => { setPassword(event.target.value) }}
-                defaultValue={post.status}
-                required/>
-              </div>
-              <div className="form-group">
-                <div className="form-check">
-                  <input className="form-check-input" type="checkbox" id="gridCheck" />
-                  <label className="form-check-label" htmlFor="gridCheck">
-                    Check me out
-                  </label>
-                </div>
-              </div>
-              </>
-              ))}
-            </form>
-          </div>
-        </div>
-        </div>
+        </main>
+        <br></br>
       </>
     );
-  // }
-
+  }
   return (
     <>
-      <div className="alert alert-danger" role="alert">
-        Not signed in <br />
-        <button className="btn btn-primary" onClick={() => signIn()}>Sign in</button>
-      </div>
+      Not signed in <br />
+      <button onClick={() => signIn()}>Sign in</button>
     </>
   );
 }
